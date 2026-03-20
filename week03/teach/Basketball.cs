@@ -27,10 +27,23 @@ public class Basketball
             var fields = reader.ReadFields()!;
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+        // If the player exists, add to their career total
+            if (players.ContainsKey(playerId)) {
+                players[playerId] += points;
+            } 
+            // If they aren't in the map yet, initialize their entry
+            else {
+                players[playerId] = points;
+            }
         }
 
-        Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+        // Use LINQ to sort by total points (Value) and take the top 10
+        var topPlayers = players.OrderByDescending(p => p.Value).Take(10);
 
-        var topPlayers = new string[10];
+        Console.WriteLine("Top 10 Players by Total Career Points:");
+        Console.WriteLine("-------------------------------------");
+        foreach (var player in topPlayers) {
+            Console.WriteLine($"{player.Key}: {player.Value} points");
+        }
     }
 }
